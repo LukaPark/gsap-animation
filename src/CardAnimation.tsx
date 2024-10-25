@@ -10,6 +10,7 @@ const playerData: PlayerInfo[] = [
         player_number: 30,
         team_color: 'linear-gradient(135deg, #1D428A 0%, #FDB927 100%)',
         player_achievement: ['3x NBA Champion', '2x NBA MVP'],
+        image_url: '/nba_players/stephen_curry.jpeg',
     },
     {
         name: 'LeBron James',
@@ -18,6 +19,7 @@ const playerData: PlayerInfo[] = [
         player_number: 23,
         team_color: 'linear-gradient(135deg, #552583 0%, #FFC72C 100%)',
         player_achievement: ['4x NBA Champion', '4x NBA MVP'],
+        image_url: '/nba_players/lebron_james.jpeg',
     },
     {
         name: 'Kevin Durant',
@@ -26,6 +28,7 @@ const playerData: PlayerInfo[] = [
         player_number: 35,
         team_color: 'linear-gradient(135deg, #1D1160 0%, #E56020 100%)',
         player_achievement: ['2x NBA Champion', '2x NBA MVP'],
+        image_url: '/nba_players/kevin_durant.png',
     },
     {
         name: 'Luka Dončić',
@@ -34,21 +37,23 @@ const playerData: PlayerInfo[] = [
         player_number: 77,
         team_color: 'linear-gradient(135deg, #00538C 0%, #002B5C 100%)',
         player_achievement: ['Rookie of the Year', '2x NBA All-Star'],
+        image_url: '/nba_players/luka_doncic.jpg',
     },
     {
-        name: 'Michael Jordan',
-        team_name: 'Chicago Bulls',
+        name: 'Shai Gilgeous-Alexander',
+        team_name: 'Oklahoma City Thunder',
         position: 'G',
-        player_number: 23,
-        team_color: 'linear-gradient(135deg, #CE1141 0%, #000000 100%)',
-        player_achievement: ['6x NBA Champion', '5x NBA MVP'],
+        player_number: 2,
+        team_color: 'linear-gradient(135deg, #007AC1 0%, #EF3B24 100%)',
+        player_achievement: ['1x NBA First team','NBA All-Rookie Second Team'],
+        image_url: '/nba_players/shai.jpg',
     }
 ]
 
 const card = {
-    w: 300,
-    h: 420,
-    gap: 20,
+    w: '18vw',
+    h: '25.2vw',
+    gap: '1.5vw',
 }
 
 export default function CardAnimation() {
@@ -56,10 +61,17 @@ export default function CardAnimation() {
     const {contextSafe} = useGSAP(() => {
     }, {scope});
 
+    function vwToPX(vw: string) {
+        return (window.innerWidth * parseInt(vw.replace('vw', ''))) / 100;
+    }
+
     const openCards = contextSafe(() => {
         const combine = gsap.timeline();
-        const w = card.w;
-        const gap = card.gap;
+        let w = vwToPX(card.w);
+        let gap = vwToPX(card.gap);
+
+        if (w > 300) w = 300;
+        if (gap > 20) gap =20;
 
         // 카드 중앙으로 모으기
         combine.to('.card', {
@@ -143,10 +155,10 @@ export default function CardAnimation() {
     };
 
     return (
-        <div ref={scope} className={'bg-gray-950 w-screen h-screen'}>
+        <div ref={scope} className={'bg-gray-950 w-screen h-screen overflow-hidden'}>
             <Flash />
-            <div className={'w-full flex justify-center items-center min-h-[50vh] p-5'} style={{
-                gap: `${card.gap}px`,
+            <div className={'w-full flex flex-wrap justify-center items-center min-h-[50vh] p-5'} style={{
+                gap: `1.5vw`,
             }}>
                 {
                     playerData.map((player, index) => (
@@ -163,11 +175,12 @@ export default function CardAnimation() {
 }
 
 function Card({player}: { player: PlayerInfo }) {
+
     return (
         <div
-            className={`relative card bg-[#FFFDD0] rounded-[18px] shadow-2xl flex justify-center items-center`} style={{
-                width: `${card.w}px`,
-                height: `${card.h}px`,
+            className={`relative max-w-[300px] max-h-[420px] card bg-[#FFFDD0] rounded-[18px] shadow-2xl flex justify-center items-center`} style={{
+                width: `18vw`,
+                height: `25.2vw`,
         }}>
             <Cover />
             <CardFront player={player} />
@@ -184,7 +197,7 @@ const Cover = () => {
 
 const Flash = () => {
     return (
-        <div className={'flash fixed inset-0 bg-white z-10 opacity-0 pointer-events-none'}></div>
+        <div className={'flash fixed inset-0 h-screen bg-white z-10 opacity-0 pointer-events-none'}></div>
     );
 };
 
@@ -195,24 +208,26 @@ type PlayerInfo = {
     position: string;
     player_number: number;
     player_achievement: string[];
+    image_url: string;
 }
 
 
 const CardFront = ({player}: { player: PlayerInfo }) => {
     return (
-        <div className="card-front bg-amber-200 absolute w-full h-full rounded-[15px] overflow-hidden" style={{
+        <div className="card-front group/card-front cursor-pointer bg-amber-200 absolute w-full h-full rounded-[15px] shadow-card_hard overflow-hidden" style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
         }}>
-            <div className={'w-full h-3/5'}>
-                {/*<img src="https://www.nba.com/assets/logos/teams/primary/web/ATL.svg" alt="ATL"/>*/}
-                <div className={'w-full h-full bg-amber-200'}></div>
+            <div className={'w-full h-full'}>
+                <div className={'w-full h-full'}>
+                    <img src={player.image_url} alt={player.name} className={'w-full h-full object-cover'} />
+                </div>
             </div>
-            <div className={'card-content rounded-[15px] p-[15px] text-white text-center h-2/5'} style={{
+            <div className={'card-content absolute z-10 bottom-0 left-0 w-full rounded-[15px] p-2 text-white text-center'} style={{
                 background: player.team_color,
             }}>
                 <div
-                    className={'text-[24px] font-bold my-[10px]'}
+                    className={'text-[14px] font-bold'}
                     style={{
                         textShadow: '1px 1px 3px rgba(0,0,0,0.3)',
                     }}
@@ -220,7 +235,7 @@ const CardFront = ({player}: { player: PlayerInfo }) => {
                     {player.name}
                 </div>
                 <div
-                    className={'text-[18px]'}
+                    className={'text-[18px] hidden group-hover/card-front:block'}
                     style={{
                         textShadow: '1px 1px 3px rgba(0,0,0,0.2)',
                     }}
@@ -228,12 +243,12 @@ const CardFront = ({player}: { player: PlayerInfo }) => {
                     {player.team_name}
                 </div>
                 <div
-                    className={'text-[16px] opacity-90'}
+                    className={'text-[16px] opacity-90  hidden group-hover/card-front:block'}
                 >
                     #{player.player_number} | {player.position}
                 </div>
                 <div
-                    className={'flex justify-between text-[14px] my-[10px] opacity-90 p-[5px] rounded-[5px] bg-[rgba(255,255,255,0.1)]'}
+                    className={'flex flex-col justify-between text-[14px] my-[10px] opacity-90 p-[5px] rounded-[5px] bg-[rgba(255,255,255,0.1)]  hidden group-hover/card-front:flex'}
                 >
                     {player.player_achievement.map((achievement, index) => (
                         <span key={index}>{achievement}</span>
@@ -250,24 +265,39 @@ const CardBack = () => {
             backfaceVisibility: 'hidden',
             // transform: 'rotateY(180deg)',
         }}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${card.w} ${card.h}`} width={card.w} height={card.h}>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 300 420"
+                preserveAspectRatio="xMidYMid meet"
+            >
                 {/* 카드 배경 */}
-                <rect width={card.w} height={card.h} rx="15" fill="#333333"/>
+                <rect width="300" height="420" rx="15" fill="#333333"/>
 
                 {/* 장식적인 테두리 */}
-                <rect x="10" y="10" width={card.w-20} height={card.h - 20} rx="15"
-                      fill="none" stroke="#666666" stroke-width="2"/>
+                <rect
+                    x="10" y="10"
+                    width="280" height="400"
+                    rx="15"
+                    fill="none"
+                    stroke="#666666"
+                    strokeWidth="2"
+                />
 
                 {/* NBA 로고 스타일의 텍스트 */}
-                <text x={(card.w / 2)} y={card.h /2 + 24}
-                      font-family="Arial" font-weight="bold" font-size="72"
-                      fill="#FFFFFF" text-anchor="middle">
+                <text
+                    x="150" y="234"
+                    fontFamily="Arial"
+                    fontWeight="bold"
+                    fontSize="72"
+                    fill="#FFFFFF"
+                    textAnchor="middle"
+                >
                     NBA
                 </text>
 
                 {/* 장식적인 선들 */}
-                <path d={`M20 ${card.h/4} L${card.w-20} ${card.h/4}`} stroke="#666666" stroke-width="2"/>
-                <path d={`M20 ${card.h/4*3} L${card.w-20} ${card.h/4*3}`} stroke="#666666" stroke-width="2"/>
+                <path d="M20 105 L280 105" stroke="#666666" strokeWidth="2"/>
+                <path d="M20 315 L280 315" stroke="#666666" strokeWidth="2"/>
             </svg>
         </div>
     );
