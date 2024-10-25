@@ -36,6 +36,18 @@ export default function CardAnimation() {
             },
             '-=0.5', // 선행 애니메이션이 끝나기 0.5 초 전에 시작
         )
+
+        // 카드 Shaking
+        const shakeRange = 2;
+
+        combine.to('.card', {
+            duration: 0.1,
+            x: `+=${shakeRange}`,
+            y: `+=${shakeRange}`,
+            repeat: 8,
+            ease: 'linear',
+        })
+
     });
 
     const refresh = () => {
