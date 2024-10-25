@@ -48,6 +48,18 @@ export default function CardAnimation() {
             ease: 'linear',
         })
 
+        // 전체화면 Flash
+        combine.to('.flash', {
+            opacity: 1,
+            duration: 0.1,
+            ease: 'power4.out',
+        });
+
+        combine.to('.flash', {
+            opacity: 0,
+            duration: 2,
+            ease: 'power4.out',
+        });
     });
 
     const refresh = () => {
@@ -61,9 +73,9 @@ export default function CardAnimation() {
     };
 
     return (
-        <div ref={scope}>
-            <div className={'flash'}></div>
-            <div className={'w-full flex gap-5 justify-center p-5'}>
+        <div ref={scope} className={'bg-gray-950 w-screen h-screen'}>
+            <Flash />
+            <div className={'w-full flex gap-5 justify-center items-center min-h-[50vh] p-5'}>
                 <Card/>
                 <Card/>
                 <Card/>
@@ -71,8 +83,8 @@ export default function CardAnimation() {
                 <Card/>
             </div>
             <div className={'flex justify-center w-full gap-5'}>
-                <button onClick={openCards}>확인하기</button>
-                <button onClick={refresh}>새로고침</button>
+                <button onClick={openCards} className={'bg-gray-950 text-white'}>확인하기</button>
+                <button onClick={refresh} className={'bg-gray-950 text-white'}>새로고침</button>
             </div>
         </div>
     );
@@ -96,5 +108,11 @@ function Card() {
 const Cover = () => {
     return (
         <div className={'card-cover absolute content-[""] inset-0 rounded-[8px] bg-white opacity-0 shadow-neon'}></div>
+    );
+};
+
+const Flash = () => {
+    return (
+        <div className={'flash fixed inset-0 bg-white z-10 opacity-0 pointer-events-none'}></div>
     );
 };
