@@ -1,4 +1,4 @@
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import {useGSAP} from "@gsap/react";
 import gsap from "gsap";
 
@@ -58,12 +58,75 @@ const card = {
 
 export default function CardAnimation() {
     const scope = useRef<HTMLDivElement>(null);
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+
     const {contextSafe} = useGSAP(() => {
     }, {scope});
 
     function vwToPX(vw: string) {
         return (window.innerWidth * parseInt(vw.replace('vw', ''))) / 100;
     }
+
+    // 카드 단건 오픈, currentIndex 를 이용해 몇번째 카드인지 확인
+    const openCard = () => {
+        const tl = gsap.timeline();
+
+        // 카드 광원 효과
+        tl.to(
+            '.card .card-cover',
+            {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.in',
+            },
+            '-=0.5', // 선행 애니메이션이 끝나기 0.5 초 전에 시작
+        )
+
+        // 카드 Shaking
+        const shakeRange = 2;
+        tl.to('.card', {
+            duration: 0.1,
+            x: `+=${shakeRange}`,
+            y: `+=${shakeRange}`,
+            repeat: 8,
+            ease: 'linear',
+        })
+
+        // 전체화면 Flash
+        tl.to('.flash', {
+            opacity: 1,
+            duration: 0.1,
+            ease: 'power4.out',
+        });
+
+        tl.to('.flash', {
+            opacity: 0,
+            duration: 2,
+            ease: 'power4.out',
+        });
+
+
+        // 카드 180도 뒤집기
+        tl.to('.card .card-front', {
+            duration: 0.5,
+            rotationY: 0,
+            ease: 'power4.out',
+        }, '<');
+
+        tl.to('.card .card-back', {
+            duration: 0.5,
+            rotationY: 180,
+            ease: 'power4.out',
+        }, '<');
+
+        // cover 숨기기
+        tl.to('.card .card-cover', {
+            opacity: 0,
+            duration: 0.1,
+            ease: 'power2.in',
+        }, '<');
+    };
 
     const openCards = contextSafe(() => {
         const combine = gsap.timeline();
@@ -150,6 +213,19 @@ export default function CardAnimation() {
         }, '<');
     });
 
+    const onCardClick = () => {
+        // TODO: 카드 1장씩 뒤집기
+    };
+
+    const onMobileCardClick = () => {
+        setCurrentIndex((prev) => {
+            if (prev === playerData.length - 1) {
+                return 0;
+            }
+            return prev + 1;
+        });
+    }
+
     const refresh = () => {
         window.location.reload();
     };
@@ -157,31 +233,44 @@ export default function CardAnimation() {
     return (
         <div ref={scope} className={'bg-gray-950 w-screen h-screen overflow-hidden'}>
             <Flash />
-            <div className={'w-full flex flex-wrap justify-center items-center min-h-[50vh] p-5'} style={{
+            <div className={'hidden md:flex w-full flex-wrap justify-center items-center min-h-[50vh] p-5'} style={{
                 gap: `1.5vw`,
             }}>
                 {
                     playerData.map((player, index) => (
-                        <Card key={index} player={player}/>
+                        <Card key={index} player={player} onClick={onCardClick}/>
                     ))
                 }
             </div>
+            <div className={"md:hidden flex w-full justify-center items-center"}>
+                <Card player={playerData[currentIndex]} onClick={onMobileCardClick} />
+            </div>
             <div className={'flex justify-center w-full gap-5'}>
-                <button onClick={openCards} className={'bg-gray-950 text-white'}>확인하기</button>
+                <button onClick={openCards} className={'bg-gray-950 text-white hidden md:flex'}>확인하기</button>
+                <button onClick={openCard} className={'bg-gray-950 text-white md:hidden'}>확인하기</button>
                 <button onClick={refresh} className={'bg-gray-950 text-white'}>새로고침</button>
             </div>
         </div>
     );
 }
 
-function Card({player}: { player: PlayerInfo }) {
+interface CardProps {
+    player: PlayerInfo;
+    onClick: () => void;
+}
+
+function Card(props: CardProps) {
+    const { player, onClick } = props;
 
     return (
         <div
-            className={`relative max-w-[300px] max-h-[420px] card bg-[#FFFDD0] rounded-[18px] shadow-2xl flex justify-center items-center`} style={{
-                width: `18vw`,
-                height: `25.2vw`,
-        }}>
+            className={`relative max-w-[300px] max-h-[420px] card bg-[#FFFDD0] rounded-[18px] shadow-2xl flex justify-center items-center`}
+            onClick={onClick}
+            style={{
+                width: card.w,
+                height: card.h,
+            }}
+        >
             <Cover />
             <CardFront player={player} />
             <CardBack />
