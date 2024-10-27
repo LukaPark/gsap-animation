@@ -213,8 +213,66 @@ export default function CardAnimation() {
         }, '<');
     });
 
-    const onCardClick = () => {
-        // TODO: 카드 1장씩 뒤집기
+    const onCardClick = (index: number) => {
+        const tl = gsap.timeline();
+        // 선택된 카드만 뒤집기
+        const target = `.card:nth-child(${index + 1})`;
+
+        // 카드 광원 효과
+        tl.to(
+            `${target} .card-cover`,
+            {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.in',
+            },
+            '-=0.5', // 선행 애니메이션이 끝나기 0.5 초 전에 시작
+        )
+
+        // 카드 Shaking
+        const shakeRange = 2;
+
+        tl.to('.card', {
+            duration: 0.1,
+            x: `+=${shakeRange}`,
+            y: `+=${shakeRange}`,
+            repeat: 8,
+            ease: 'linear',
+        })
+
+        // 전체화면 Flash
+        tl.to('.flash', {
+            opacity: 1,
+            duration: 0.1,
+            ease: 'power4.out',
+        });
+
+        tl.to('.flash', {
+            opacity: 0,
+            duration: 2,
+            ease: 'power4.out',
+        });
+
+        tl.to(`${target} .card-front`, {
+            duration: 0.5,
+            rotationY: 0,
+            ease: 'power4.out',
+        }, '<');
+
+        tl.to(`${target} .card-back`, {
+            duration: 0.5,
+            rotationY: 180,
+            ease: 'power4.out',
+        }, '<');
+
+        // cover 숨기기
+        tl.to(`${target} .card-cover`, {
+            opacity: 0,
+            duration: 0.1,
+            ease: 'power2.in',
+        }, '<');
+
+
     };
 
     const onMobileCardClick = () => {
@@ -238,7 +296,7 @@ export default function CardAnimation() {
             }}>
                 {
                     playerData.map((player, index) => (
-                        <Card key={index} player={player} onClick={onCardClick}/>
+                        <Card key={index} player={player} onClick={() => onCardClick(index)}/>
                     ))
                 }
             </div>
@@ -264,7 +322,7 @@ function Card(props: CardProps) {
 
     return (
         <div
-            className={`relative max-w-[300px] max-h-[420px] card bg-[#FFFDD0] rounded-[18px] shadow-2xl flex justify-center items-center`}
+            className={`relative max-w-[300px] max-h-[420px] card bg-[#FFFDD0] rounded-[18px] shadow-2xl flex justify-center items-center cursor-pointer`}
             onClick={onClick}
             style={{
                 width: card.w,
