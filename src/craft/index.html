@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./next.css">
+</head>
+<body>
+    <div class="gridLine"></div>
+    <div class="switchboard-wrap">
+<!--        <div class="switchboard light" data-state="medium"></div>-->
+<!--        <div class="switchboard light" data-state="medium"></div>-->
+<!--        <div class="switchboard light" data-state="high"></div>-->
+<!--        <div class="switchboard light" data-state="off"></div>-->
+    </div>
+</body>
+<script>
+    const switchboardWrap = document.querySelector('.switchboard-wrap');
+    Array.from({length: 27 * 5}).map((_) => {
+        const switchboard = document.createElement('div');
+        switchboard.classList.add('switchboard');
+        switchboard.classList.add('light');
+        switchboard.dataset.state = 'off';
+        switchboardWrap.appendChild(switchboard);
+    });
+
+    const letters = {
+        // L (왼쪽에서 첫 번째)
+        L: [
+            0, 27, 54, 81, 108,  // 세로줄
+            109, 110, 111, 112           // 밑에 가로줄
+        ],
+
+        // U (왼쪽에서 두 번째)
+        U: [
+            6, 33, 60, 87, 114,   // 왼쪽 세로줄
+            115, 116, 117,       // 밑에 가로줄
+            10, 37, 64, 91, 118    // 오른쪽 세로줄
+        ],
+
+        // K (왼쪽에서 세 번째)
+        K: [
+            12, 15, 39, 66, 93, 120,  // 왼쪽 세로줄
+            41, 67,               // 중간 대각선 위
+            95, 123               // 중간 대각선 아래
+        ],
+
+        // A (왼쪽에서 네 번째)
+        A: [
+            18, 45, 72, 99, 126,  // 왼쪽 세로줄
+            19, 20, 73, 74,            // 중간 가로줄
+            21, 48, 75, 102, 129  // 오른쪽 세로줄
+        ]
+    };
+
+    // 모든 인덱스를 합친 배열
+    const LUKA = [...letters.L, ...letters.U, ...letters.K, ...letters.A];
+
+    const switchboards = document.querySelectorAll('.switchboard');
+
+    let randomInterval = null;
+    let timeouts = [];
+
+    function clearAllTimeouts() {
+        timeouts.forEach((timeout) => {
+            clearTimeout(timeout);
+        });
+        timeouts = [];
+    }
+
+    function randomLightOn() {
+        console.log('randomLightOn');
+        switchboards.forEach((switchboard, i) => {
+            setTimeout(() => {
+                if (Math.random() > 0.9) {
+                    switchboard.dataset.state = 'medium';
+                    const timeout = setTimeout(() => {
+                        switchboard.dataset.state = 'off';
+                    }, 1000);
+                    timeouts.push(timeout);
+                }
+            }, 10 * i);
+        });
+    }
+
+    randomInterval = setInterval(randomLightOn, 1000);
+
+    switchboardWrap.addEventListener('mouseover',() => {
+        clearAllTimeouts();
+        clearInterval(randomInterval);
+        switchboards.forEach((switchboard, i) => {
+            setTimeout(() => {
+                if (LUKA.includes(i-2)) {
+                    switchboard.dataset.state = 'high';
+                } else {
+                    switchboard.dataset.state = 'off';
+                }
+            }, 10 * i);
+        })}
+    );
+
+    switchboardWrap.addEventListener('mouseout', () => {
+        clearAllTimeouts();
+
+        randomInterval = setInterval(randomLightOn, 1000);
+        switchboards.forEach((switchboard, i) => {
+                const timeout =setTimeout(() => {
+                    switchboard.dataset.state = 'off';
+                }, 10 * i);
+                timeouts.push(timeout);
+            })
+        }
+    );
+
+</script>
+</html>
