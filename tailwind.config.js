@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [
-        "./index.html",
-        "./src/**/*.{jsx,tsx}",
-    ],
+    content: ['./index.html', './src/**/*.{jsx,tsx}'],
     theme: {
         extend: {
             boxShadow: {
@@ -12,10 +9,16 @@ export default {
                 card_soft: '0 10px 20px rgba(0, 0, 0, 0.15)',
                 card_hard: '0 20px 40px rgba(0, 0, 0, 0.3)',
                 card_glow: '0 0 20px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 0, 0, 0.1)',
-                card_fancy: 'rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px'
-            }
+                card_fancy: 'rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px',
+            },
+            backgroundColor: {
+                primary: '#007bff',
+                secondary: {
+                    100: '#E2E2D5',
+                    200: '#888883',
+                },
+            },
         },
     },
     plugins: [],
-}
-
+};
