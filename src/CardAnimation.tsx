@@ -1,6 +1,6 @@
-import {useRef, useState} from "react";
-import {useGSAP} from "@gsap/react";
-import gsap from "gsap";
+import { useRef, useState } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 
 const playerData: PlayerInfo[] = [
     {
@@ -45,24 +45,23 @@ const playerData: PlayerInfo[] = [
         position: 'G',
         player_number: 2,
         team_color: 'linear-gradient(135deg, #007AC1 0%, #EF3B24 100%)',
-        player_achievement: ['1x NBA First team','NBA All-Rookie Second Team'],
+        player_achievement: ['1x NBA First team', 'NBA All-Rookie Second Team'],
         image_url: '/nba_players/shai.jpg',
-    }
-]
+    },
+];
 
 const card = {
     w: '18vw',
     h: '25.2vw',
     gap: '1.5vw',
-}
+};
 
 export default function CardAnimation() {
     const scope = useRef<HTMLDivElement>(null);
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const {contextSafe} = useGSAP(() => {
-    }, {scope});
+    const { contextSafe } = useGSAP(() => {}, { scope });
 
     function vwToPX(vw: string) {
         return (window.innerWidth * parseInt(vw.replace('vw', ''))) / 100;
@@ -81,7 +80,7 @@ export default function CardAnimation() {
                 ease: 'power2.in',
             },
             '-=0.5', // 선행 애니메이션이 끝나기 0.5 초 전에 시작
-        )
+        );
 
         // 카드 Shaking
         const shakeRange = 2;
@@ -91,7 +90,7 @@ export default function CardAnimation() {
             y: `+=${shakeRange}`,
             repeat: 8,
             ease: 'linear',
-        })
+        });
 
         // 전체화면 Flash
         tl.to('.flash', {
@@ -106,26 +105,37 @@ export default function CardAnimation() {
             ease: 'power4.out',
         });
 
-
         // 카드 180도 뒤집기
-        tl.to('.card .card-front', {
-            duration: 0.5,
-            rotationY: 0,
-            ease: 'power4.out',
-        }, '<');
+        tl.to(
+            '.card .card-front',
+            {
+                duration: 0.5,
+                rotationY: 0,
+                ease: 'power4.out',
+            },
+            '<',
+        );
 
-        tl.to('.card .card-back', {
-            duration: 0.5,
-            rotationY: 180,
-            ease: 'power4.out',
-        }, '<');
+        tl.to(
+            '.card .card-back',
+            {
+                duration: 0.5,
+                rotationY: 180,
+                ease: 'power4.out',
+            },
+            '<',
+        );
 
         // cover 숨기기
-        tl.to('.card .card-cover', {
-            opacity: 0,
-            duration: 0.1,
-            ease: 'power2.in',
-        }, '<');
+        tl.to(
+            '.card .card-cover',
+            {
+                opacity: 0,
+                duration: 0.1,
+                ease: 'power2.in',
+            },
+            '<',
+        );
     };
 
     const openCards = contextSafe(() => {
@@ -134,7 +144,7 @@ export default function CardAnimation() {
         let gap = vwToPX(card.gap);
 
         if (w > 300) w = 300;
-        if (gap > 20) gap =20;
+        if (gap > 20) gap = 20;
 
         // 카드 중앙으로 모으기
         combine.to('.card', {
@@ -159,7 +169,7 @@ export default function CardAnimation() {
                 ease: 'power2.in',
             },
             '-=0.5', // 선행 애니메이션이 끝나기 0.5 초 전에 시작
-        )
+        );
 
         // 카드 Shaking
         const shakeRange = 2;
@@ -170,7 +180,7 @@ export default function CardAnimation() {
             y: `+=${shakeRange}`,
             repeat: 8,
             ease: 'linear',
-        })
+        });
 
         // 전체화면 Flash
         combine.to('.flash', {
@@ -186,34 +196,50 @@ export default function CardAnimation() {
         });
 
         // 각 카드 위치 초기화
-        combine.to('.card', {
-            duration: 0.5,
-            x: 0,
-            ease: 'power4.out',
-        }, '<');
+        combine.to(
+            '.card',
+            {
+                duration: 0.5,
+                x: 0,
+                ease: 'power4.out',
+            },
+            '<',
+        );
 
         // 카드 180도 뒤집기
-        combine.to('.card .card-front', {
-            duration: 0.5,
-            rotationY: 0,
-            ease: 'power4.out',
-        }, '<');
+        combine.to(
+            '.card .card-front',
+            {
+                duration: 0.5,
+                rotationY: 0,
+                ease: 'power4.out',
+            },
+            '<',
+        );
 
-        combine.to('.card .card-back', {
-            duration: 0.5,
-            rotationY: 180,
-            ease: 'power4.out',
-        }, '<');
+        combine.to(
+            '.card .card-back',
+            {
+                duration: 0.5,
+                rotationY: 180,
+                ease: 'power4.out',
+            },
+            '<',
+        );
 
         // cover 숨기기
-        combine.to('.card .card-cover', {
-            opacity: 0,
-            duration: 0.1,
-            ease: 'power2.in',
-        }, '<');
+        combine.to(
+            '.card .card-cover',
+            {
+                opacity: 0,
+                duration: 0.1,
+                ease: 'power2.in',
+            },
+            '<',
+        );
     });
 
-    const onCardClick = (index: number) => {
+    const onCardOpen = (index: number) => {
         const tl = gsap.timeline();
         // 선택된 카드만 뒤집기
         const target = `.card:nth-child(${index + 1})`;
@@ -227,7 +253,7 @@ export default function CardAnimation() {
                 ease: 'power2.in',
             },
             '-=0.5', // 선행 애니메이션이 끝나기 0.5 초 전에 시작
-        )
+        );
 
         // 카드 Shaking
         const shakeRange = 2;
@@ -238,7 +264,7 @@ export default function CardAnimation() {
             y: `+=${shakeRange}`,
             repeat: 8,
             ease: 'linear',
-        })
+        });
 
         // 전체화면 Flash
         tl.to('.flash', {
@@ -253,26 +279,40 @@ export default function CardAnimation() {
             ease: 'power4.out',
         });
 
-        tl.to(`${target} .card-front`, {
-            duration: 0.5,
-            rotationY: 0,
-            ease: 'power4.out',
-        }, '<');
+        tl.to(
+            `${target} .card-front`,
+            {
+                duration: 0.5,
+                rotationY: 0,
+                ease: 'power4.out',
+            },
+            '<',
+        );
 
-        tl.to(`${target} .card-back`, {
-            duration: 0.5,
-            rotationY: 180,
-            ease: 'power4.out',
-        }, '<');
+        tl.to(
+            `${target} .card-back`,
+            {
+                duration: 0.5,
+                rotationY: 180,
+                ease: 'power4.out',
+            },
+            '<',
+        );
 
         // cover 숨기기
-        tl.to(`${target} .card-cover`, {
-            opacity: 0,
-            duration: 0.1,
-            ease: 'power2.in',
-        }, '<');
+        tl.to(
+            `${target} .card-cover`,
+            {
+                opacity: 0,
+                duration: 0.1,
+                ease: 'power2.in',
+            },
+            '<',
+        );
+    };
 
-
+    const onCardZoom = (player: PlayerInfo) => {
+        console.log(player);
     };
 
     const onMobileCardClick = () => {
@@ -282,7 +322,7 @@ export default function CardAnimation() {
             }
             return prev + 1;
         });
-    }
+    };
 
     const refresh = () => {
         window.location.reload();
@@ -291,22 +331,29 @@ export default function CardAnimation() {
     return (
         <div ref={scope} className={'bg-gray-950 w-screen h-screen overflow-hidden'}>
             <Flash />
-            <div className={'hidden md:flex w-full flex-wrap justify-center items-center min-h-[50vh] p-5'} style={{
-                gap: `1.5vw`,
-            }}>
-                {
-                    playerData.map((player, index) => (
-                        <Card key={index} player={player} onClick={() => onCardClick(index)}/>
-                    ))
-                }
+            <div
+                className={'md:flex w-full flex-auto justify-center items-center min-h-[50vh] p-5'}
+                style={{
+                    gap: `1.5vw`,
+                }}
+            >
+                {playerData.map((player, index) => (
+                    <Card key={index} player={player} onCardOpen={() => onCardOpen(index)} onCardZoom={() => onCardZoom(player)} />
+                ))}
             </div>
-            <div className={"md:hidden flex w-full justify-center items-center"}>
-                <Card player={playerData[currentIndex]} onClick={onMobileCardClick} />
-            </div>
+            {/*<div className={"md:hidden flex w-full justify-center items-center"}>*/}
+            {/*    <Card player={playerData[currentIndex]} onClick={onMobileCardClick} />*/}
+            {/*</div>*/}
             <div className={'flex justify-center w-full gap-5'}>
-                <button onClick={openCards} className={'bg-gray-950 text-white hidden md:flex'}>확인하기</button>
-                <button onClick={openCard} className={'bg-gray-950 text-white md:hidden'}>확인하기</button>
-                <button onClick={refresh} className={'bg-gray-950 text-white'}>새로고침</button>
+                <button onClick={openCards} className={'bg-gray-950 text-white hidden md:flex'}>
+                    확인하기
+                </button>
+                <button onClick={openCard} className={'bg-gray-950 text-white md:hidden'}>
+                    확인하기
+                </button>
+                <button onClick={refresh} className={'bg-gray-950 text-white'}>
+                    새로고침
+                </button>
             </div>
         </div>
     );
@@ -314,16 +361,26 @@ export default function CardAnimation() {
 
 interface CardProps {
     player: PlayerInfo;
-    onClick: () => void;
+    onCardOpen: () => void;
+    onCardZoom: () => void;
 }
 
 function Card(props: CardProps) {
-    const { player, onClick } = props;
+    const { player, onCardZoom, onCardOpen } = props;
+
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div
             className={`relative max-w-[300px] max-h-[420px] card bg-[#FFFDD0] rounded-[18px] shadow-2xl flex justify-center items-center cursor-pointer`}
-            onClick={onClick}
+            onClick={() => {
+                if (isOpen) {
+                    onCardZoom();
+                } else {
+                    setIsOpen(true);
+                    onCardOpen();
+                }
+            }}
             style={{
                 width: card.w,
                 height: card.h,
@@ -337,15 +394,11 @@ function Card(props: CardProps) {
 }
 
 const Cover = () => {
-    return (
-        <div className={'card-cover absolute content-[""] inset-0 rounded-[8px] bg-white opacity-0 shadow-neon'}></div>
-    );
+    return <div className={'card-cover absolute content-[""] inset-0 rounded-[8px] bg-white opacity-0 shadow-neon'}></div>;
 };
 
 const Flash = () => {
-    return (
-        <div className={'flash fixed inset-0 h-screen bg-white z-10 opacity-0 pointer-events-none'}></div>
-    );
+    return <div className={'flash fixed inset-0 h-screen bg-white z-10 opacity-0 pointer-events-none'}></div>;
 };
 
 type PlayerInfo = {
@@ -356,23 +409,28 @@ type PlayerInfo = {
     player_number: number;
     player_achievement: string[];
     image_url: string;
-}
+};
 
-
-const CardFront = ({player}: { player: PlayerInfo }) => {
+const CardFront = ({ player }: { player: PlayerInfo }) => {
     return (
-        <div className="card-front group/card-front cursor-pointer bg-amber-200 absolute w-full h-full rounded-[15px] shadow-card_hard overflow-hidden" style={{
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)',
-        }}>
+        <div
+            className="card-front group/card-front cursor-pointer bg-amber-200 absolute w-full h-full rounded-[15px] shadow-card_hard overflow-hidden"
+            style={{
+                backfaceVisibility: 'hidden',
+                transform: 'rotateY(180deg)',
+            }}
+        >
             <div className={'w-full h-full'}>
                 <div className={'w-full h-full'}>
                     <img src={player.image_url} alt={player.name} className={'w-full h-full object-cover'} />
                 </div>
             </div>
-            <div className={'card-content absolute z-10 bottom-0 left-0 w-full rounded-[15px] p-2 text-white text-center'} style={{
-                background: player.team_color,
-            }}>
+            <div
+                className={'card-content absolute z-10 bottom-0 left-0 w-full rounded-[15px] p-2 text-white text-center'}
+                style={{
+                    background: player.team_color,
+                }}
+            >
                 <div
                     className={'text-[14px] font-bold'}
                     style={{
@@ -389,14 +447,10 @@ const CardFront = ({player}: { player: PlayerInfo }) => {
                 >
                     {player.team_name}
                 </div>
-                <div
-                    className={'text-[16px] opacity-90  hidden group-hover/card-front:block'}
-                >
+                <div className={'text-[16px] opacity-90  hidden group-hover/card-front:block'}>
                     #{player.player_number} | {player.position}
                 </div>
-                <div
-                    className={'flex flex-col justify-between text-[14px] my-[10px] opacity-90 p-[5px] rounded-[5px] bg-[rgba(255,255,255,0.1)]  hidden group-hover/card-front:flex'}
-                >
+                <div className={'flex-col justify-between text-[14px] my-[10px] opacity-90 p-[5px] rounded-[5px] bg-[rgba(255,255,255,0.1)]  hidden group-hover/card-front:flex'}>
                     {player.player_achievement.map((achievement, index) => (
                         <span key={index}>{achievement}</span>
                     ))}
@@ -404,48 +458,33 @@ const CardFront = ({player}: { player: PlayerInfo }) => {
             </div>
         </div>
     );
-}
+};
 
 const CardBack = () => {
     return (
-        <div className={'card-back w-full h-full'} style={{
-            backfaceVisibility: 'hidden',
-            // transform: 'rotateY(180deg)',
-        }}>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 300 420"
-                preserveAspectRatio="xMidYMid meet"
-            >
+        <div
+            className={'card-back w-full h-full'}
+            style={{
+                backfaceVisibility: 'hidden',
+                // transform: 'rotateY(180deg)',
+            }}
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid meet">
                 {/* 카드 배경 */}
-                <rect width="300" height="420" rx="15" fill="#333333"/>
+                <rect width="300" height="420" rx="15" fill="#333333" />
 
                 {/* 장식적인 테두리 */}
-                <rect
-                    x="10" y="10"
-                    width="280" height="400"
-                    rx="15"
-                    fill="none"
-                    stroke="#666666"
-                    strokeWidth="2"
-                />
+                <rect x="10" y="10" width="280" height="400" rx="15" fill="none" stroke="#666666" strokeWidth="2" />
 
                 {/* NBA 로고 스타일의 텍스트 */}
-                <text
-                    x="150" y="234"
-                    fontFamily="Arial"
-                    fontWeight="bold"
-                    fontSize="72"
-                    fill="#FFFFFF"
-                    textAnchor="middle"
-                >
+                <text x="150" y="234" fontFamily="Arial" fontWeight="bold" fontSize="72" fill="#FFFFFF" textAnchor="middle">
                     NBA
                 </text>
 
                 {/* 장식적인 선들 */}
-                <path d="M20 105 L280 105" stroke="#666666" strokeWidth="2"/>
-                <path d="M20 315 L280 315" stroke="#666666" strokeWidth="2"/>
+                <path d="M20 105 L280 105" stroke="#666666" strokeWidth="2" />
+                <path d="M20 315 L280 315" stroke="#666666" strokeWidth="2" />
             </svg>
         </div>
     );
-}
+};
