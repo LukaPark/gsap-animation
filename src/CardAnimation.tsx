@@ -59,7 +59,7 @@ const card = {
 export default function CardAnimation() {
     const scope = useRef<HTMLDivElement>(null);
 
-    const [currentIndex, setCurrentIndex] = useState(0);
+    // const [currentIndex, setCurrentIndex] = useState(0);
 
     const { contextSafe } = useGSAP(() => {}, { scope });
 
@@ -315,14 +315,14 @@ export default function CardAnimation() {
         console.log(player);
     };
 
-    const onMobileCardClick = () => {
-        setCurrentIndex((prev) => {
-            if (prev === playerData.length - 1) {
-                return 0;
-            }
-            return prev + 1;
-        });
-    };
+    // const onMobileCardClick = () => {
+    //     setCurrentIndex((prev) => {
+    //         if (prev === playerData.length - 1) {
+    //             return 0;
+    //         }
+    //         return prev + 1;
+    //     });
+    // };
 
     const refresh = () => {
         window.location.reload();
